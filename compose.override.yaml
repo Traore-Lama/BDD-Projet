@@ -1,12 +1,15 @@
-
 services:
-###> doctrine/doctrine-bundle ###
+  ###> doctrine/doctrine-bundle ###
   database:
     ports:
-      - "5432"
-###< doctrine/doctrine-bundle ###
+      - "3307:3306"   # MariaDB, pour Symfony et les outils externes
+  ###< doctrine/doctrine-bundle ###
 
-###> symfony/mailer ###
+  phpmyadmin:
+    ports:
+      - "8081:80"     # phpMyAdmin dans le navigateur
+
+  ###> symfony/mailer ###
   mailer:
     image: axllent/mailpit
     ports:
