@@ -27,6 +27,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $premiereConnexion = true;
 
+    public function __construct()
+    {
+
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;

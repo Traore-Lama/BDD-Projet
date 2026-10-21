@@ -31,8 +31,8 @@ class Implant
     #[ORM\ManyToOne(inversedBy: 'implants')]
     private ?Category $Category = null;
 
-    #[ORM\ManyToOne(inversedBy: 'implants')]
-    private ?Patient $Patient = null;
+    #[ORM\OneToMany(targetEntity: ImplantPose::class, mappedBy: 'implant')]
+    private Collection $implantPoses;
 
     /**
      * @var Collection<int, self>
@@ -50,6 +50,7 @@ class Implant
     {
         $this->incompatibles = new ArrayCollection();
         $this->implants = new ArrayCollection();
+        $this->implantPoses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,18 +118,6 @@ class Implant
         return $this;
     }
 
-    public function getPatient(): ?Patient
-    {
-        return $this->Patient;
-    }
-
-    public function setPatient(?Patient $Patient): static
-    {
-        $this->Patient = $Patient;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, self>
      */
@@ -175,6 +164,35 @@ class Implant
     {
         if ($this->implants->removeElement($implant)) {
             $implant->removeIncompatible($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ImplantPose>
+     */
+    public function getImplantPoses(): Collection
+    {
+        return $this->implantPoses;
+    }
+
+    public function addImplantPose(ImplantPose $implantPose): static
+    {
+        if (!$this->implantPoses->contains($implantPose)) {
+            $this->implantPoses->add($implantPose);
+            $implantPose->setImplant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImplantPose(ImplantPose $implantPose): static
+    {
+        if ($this->implantPoses->removeElement($implantPose)) {
+            if ($implantPose->getImplant() === $this) {
+                $implantPose->setImplant(null);
+            }
         }
 
         return $this;

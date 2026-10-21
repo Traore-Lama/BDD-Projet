@@ -32,6 +32,9 @@ class Intervention
     private ?Patient $Patient = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
+    private ?DemandeRdv $demandeRdv = null;
+
+    #[ORM\ManyToOne(inversedBy: 'interventions')]
     private ?Medecin $Medecin = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
@@ -164,6 +167,17 @@ class Intervention
             }
         }
 
+        return $this;
+    }
+
+    public function getDemandeRdv(): ?DemandeRdv
+    {
+        return $this->demandeRdv;
+    }
+
+    public function setDemandeRdv(?DemandeRdv $demandeRdv): static
+    {
+        $this->demandeRdv = $demandeRdv;
         return $this;
     }
 }

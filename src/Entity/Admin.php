@@ -16,6 +16,9 @@ class Admin extends User
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $derniereSynchronisation = null;
+
     #[ORM\Column(length: 255)]
     private ?string $prenom = null;
 
@@ -45,6 +48,17 @@ class Admin extends User
     {
         $this->prenom = $prenom;
 
+        return $this;
+    }
+
+    public function getDerniereSynchronisation(): ?\DateTime
+    {
+        return $this->derniereSynchronisation;
+    }
+
+    public function setDerniereSynchronisation(?\DateTime $derniereSynchronisation): static
+    {
+        $this->derniereSynchronisation = $derniereSynchronisation;
         return $this;
     }
 

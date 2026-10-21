@@ -50,10 +50,10 @@ class Patient extends User
     private ?\DateTime $dateCreation = null;
 
     /**
-     * @var Collection<int, Implant>
+     * @var Collection<int, ImplantPose>
      */
-    #[ORM\OneToMany(targetEntity: Implant::class, mappedBy: 'Patient')]
-    private Collection $implants;
+    #[ORM\OneToMany(targetEntity: ImplantPose::class, mappedBy: 'patient')]
+    private Collection $implantPoses;
 
     /**
      * @var Collection<int, DemandeRdv>
@@ -71,7 +71,7 @@ class Patient extends User
     {
         parent::__construct();
         $this->setRoles(['ROLE_PATIENT']);
-        $this->implants = new ArrayCollection();
+        $this->implantPoses = new ArrayCollection();
         $this->demandeRdvs = new ArrayCollection();
         $this->interventions = new ArrayCollection();
     }
@@ -214,29 +214,29 @@ class Patient extends User
     }
 
     /**
-     * @return Collection<int, Implant>
+     * @return Collection<int, ImplantPose>
      */
-    public function getImplants(): Collection
+    public function getImplantPoses(): Collection
     {
-        return $this->implants;
+        return $this->implantPoses;
     }
 
-    public function addImplant(Implant $implant): static
+    public function addImplantPose(ImplantPose $implantPose): static
     {
-        if (!$this->implants->contains($implant)) {
-            $this->implants->add($implant);
-            $implant->setPatient($this);
+        if (!$this->implantPoses->contains($implantPose)) {
+            $this->implantPoses->add($implantPose);
+            $implantPose->setPatient($this);
         }
 
         return $this;
     }
 
-    public function removeImplant(Implant $implant): static
+    public function removeImplantPose(ImplantPose $implantPose): static
     {
-        if ($this->implants->removeElement($implant)) {
-            // set the owning side to null (unless already changed)
-            if ($implant->getPatient() === $this) {
-                $implant->setPatient(null);
+        if ($this->implantPoses->removeElement($implantPose)) {
+
+            if ($implantPose->getPatient() === $this) {
+                $implantPose->setPatient(null);
             }
         }
 
@@ -264,7 +264,7 @@ class Patient extends User
     public function removeDemandeRdv(DemandeRdv $demandeRdv): static
     {
         if ($this->demandeRdvs->removeElement($demandeRdv)) {
-            // set the owning side to null (unless already changed)
+
             if ($demandeRdv->getPatient() === $this) {
                 $demandeRdv->setPatient(null);
             }
@@ -294,7 +294,6 @@ class Patient extends User
     public function removeIntervention(Intervention $intervention): static
     {
         if ($this->interventions->removeElement($intervention)) {
-            // set the owning side to null (unless already changed)
             if ($intervention->getPatient() === $this) {
                 $intervention->setPatient(null);
             }

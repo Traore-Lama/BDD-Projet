@@ -34,6 +34,12 @@ class DemandeRdv
     #[ORM\ManyToOne(inversedBy: 'demandeRdvs')]
     private ?Patient $Patient = null;
 
+    #[ORM\ManyToOne(inversedBy: 'demandeRdvs')]
+    private ?Implant $implant = null;
+
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'demandeRdv')]
+    private Collection $interventions;
+
     /**
      * @var Collection<int, CreneauxRdv>
      */
@@ -43,6 +49,7 @@ class DemandeRdv
     public function __construct()
     {
         $this->creneauxRdvs = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,6 +149,46 @@ class DemandeRdv
     public function removeCreneauxRdv(CreneauxRdv $creneauxRdv): static
     {
         $this->creneauxRdvs->removeElement($creneauxRdv);
+
+        return $this;
+    }
+
+    public function getImplant(): ?Implant
+    {
+        return $this->implant;
+    }
+
+    public function setImplant(?Implant $implant): static
+    {
+        $this->implant = $implant;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setDemandeRdv($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            if ($intervention->getDemandeRdv() === $this) {
+                $intervention->setDemandeRdv(null);
+            }
+        }
 
         return $this;
     }
